@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    border-bottom: 1px solid black;
+    padding: 30px;
+    background: #2CD39E ;
+
+}
+
+.header-info{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    .header-title {
+        font-weight: bold;
+        margin: 0;
+    
+    }
+    .header-description {
+        font-size: 10px;
+    }
+}
+
+

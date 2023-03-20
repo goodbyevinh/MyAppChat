@@ -1,0 +1,36 @@
+
+
+.message-send {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+}
+.message-receive {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+}
+.message-receive .message {
+    background: #65676b;
+}
+.message-send .message {
+    background: rgb(0, 132, 255);
+}
+
+.message {
+    border-radius: 6px;
+    padding: 10px;
+    max-width: 30%;
+    color: white;
+}
+.image {
+    height: 100px;
+    width: 100px;
+
+}

@@ -1,0 +1,18 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0px;
+    border-bottom: 2px solid black;
+    margin-bottom: 10px;
+
+    background-color: #6F2D44;
+    border-radius: 6px;
+    border-bottom: 1px black solid;
+    
+    .username {
+        color: white;
+        margin-left: 15px;
+    }
+
+}
