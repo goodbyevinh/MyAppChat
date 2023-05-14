@@ -1,3 +1,5 @@
+import { Friend } from "../account/types"
+
 export const JOIN_CHAT = 'JOIN_CHAT'
 export const SEND_MESSAGE = 'SEND_MESSAGE'
 export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE'
@@ -18,6 +20,8 @@ export const IMAGE = 'IMAGE'
 export const JOIN = 'JOIN'
 export const MESSAGE = 'MESSAGE'
 export const LEAVE = 'LEAVE'
+export const FRIEND_GROUP = 'FRIEND_GROUP'
+export const UPDATE_FRIENDS_IN_GROUP = 'UPDATE_FRIENDS_IN_GROUP'
 
 export interface MessageUser  {
     id?: number;
@@ -41,6 +45,8 @@ export interface MessageState {
     isJoin: boolean;
     connected: boolean;
     loading: boolean;
+    friends: Array<Friend>
+
 }   
 
 interface ConnectWebSocket {
@@ -72,7 +78,7 @@ interface ReceiveMessage  {
 interface GetMessages {
     type: typeof GET_MESSAGES;
     payload: {
-
+        friends: Array <Friend>
         messages: Array<Message>;
     }
 }
@@ -87,6 +93,13 @@ interface ChangeTypeChat {
         typeChat: typeof CHAT_PUBLIC | typeof CHAT_PRIVATE | typeof CHAT_GROUP | null;
     }
 }
+interface UpdateFriendGroup {
+    type: typeof UPDATE_FRIENDS_IN_GROUP,
+    payload: {
+        friend: Friend
+    }
+}
+
 
 
 export type MessageActionTypes = JoinChat
@@ -98,3 +111,5 @@ export type MessageActionTypes = JoinChat
                                 |ConnectWebSocket
                                 |GetMessages
                                 |ChangeTypeChat
+                                |UpdateFriendGroup
+                          

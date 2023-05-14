@@ -1,12 +1,13 @@
 
-import { MessageActionTypes, MessageState, CHANGE_TYPE_CHAT, GET_MESSAGES } from './types';
+import { MessageActionTypes, MessageState, CHANGE_TYPE_CHAT, GET_MESSAGES, UPDATE_FRIENDS_IN_GROUP } from './types';
 
 const initialState : MessageState = {
     typeChat: null,
     messages: [],
     isJoin: false,
     connected: false,
-    loading: false
+    loading: false,
+    friends: []
 }
 
 export const messageReducer = (state = initialState, action : MessageActionTypes) : MessageState => {
@@ -65,8 +66,29 @@ export const messageReducer = (state = initialState, action : MessageActionTypes
         }
         case GET_MESSAGES: {
             return {
-                ...state, messages: action.payload.messages
+                ...state, messages: action.payload.messages, friends: action.payload.friends
             }
+        }
+        case UPDATE_FRIENDS_IN_GROUP: {
+            if (action.payload.friend.online ) {
+                return {
+                    ...state, friends: [
+                        ...state.friends,
+                        action.payload.friend
+                    ]
+                }
+
+            } else {
+                return {
+                    ...state, 
+                    friends: [
+                        ...state.friends.filter(friend => friend.id !== action.payload.friend.id),
+                    ]
+                
+                }
+            }
+            
+
         }
         default:
             return state

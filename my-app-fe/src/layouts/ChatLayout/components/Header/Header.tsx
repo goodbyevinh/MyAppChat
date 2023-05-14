@@ -13,11 +13,14 @@ import { CHAT_PRIVATE } from './../../../../store/message/types';
 import { useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { changeTypeChat } from './../../../../store/message/action';
+import { selectorFriendInGroup } from './../../../../store/message/selector';
+
 
 const cx = classNames.bind(styles)
 
 function Header() {
   const dispatch = useDispatch();
+  const friendsGroup = useSelector(selectorFriendInGroup)
 
   const handleLogout = () => {
     dispatch(logout())
@@ -40,19 +43,19 @@ function Header() {
         
       </div>
       <div className={cx('button-group')}>
-        { typeChat == CHAT_PUBLIC ?  
+        { typeChat === CHAT_PUBLIC ?  
                                   <>
-                                    <Button icon={<UserAddOutlined/>} type={'text'} style={{marginRight:'20px'}}>Mời</Button> 
+                      
                                     <Avatar.Group size={'small'} maxCount={2} style={{marginRight:'20px'}}>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                    <Tooltip> <Avatar src={'https://www.w3schools.com/howto/img_avatar.png'}/> </Tooltip>
-                                  </Avatar.Group>
+                                        {
+                                          friendsGroup.map(friend => {
+          
+                                            return <Tooltip key={friend.id} title={friend.email}> <Avatar src={friend.oauth2? friend.avatar : `data:image/png;base64,${friend.avatar}`}/> </Tooltip>
+                                          })
+                                        }
+                                    </Avatar.Group>
                                   </>
-        : typeChat == CHAT_GROUP ?
+        : typeChat === CHAT_GROUP ?
                                   <>
                                     <Button icon={<UserAddOutlined/>} type={'text'} style={{marginRight:'20px'}}>Mời</Button> 
                                     <Avatar.Group size={'small'} maxCount={2} style={{marginRight:'20px'}}>

@@ -72,6 +72,7 @@ function SideBar() {
 
 
   const handleClickFriend = (email: string, name: string) => {
+    
     setSearchParams({typechat: 'private', email:email, name:name})
     window.location.reload();
   }
