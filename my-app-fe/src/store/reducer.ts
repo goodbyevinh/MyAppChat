@@ -13,6 +13,7 @@ const persistConfig = {
     blacklist: ['alert', 'message']
 }
 
+
 const rootReducer = combineReducers({
     account: accountReducer,
     alert: alertReducer,
@@ -21,5 +22,6 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 
-
 export {persistedReducer, rootReducer} 
+
+//test
