@@ -39,6 +39,7 @@ export const getPrivateMessage = async(email: string | null) => {
 
 }
 export const joinPublicChatRoom = () => {
+ 
     const message = {
         status: 'JOIN',
         typeChat: CHAT_PUBLIC

@@ -127,28 +127,29 @@ public class MessageServiceImp implements MessageService {
 
         Set<SimpUser> simpUsers = websocketUtils.getUsers();
         List<FriendDTO> friends = new ArrayList<>();
-        Set<SimpUser> usersWithPublic = simpUsers.stream().filter( simpUser -> {
-            boolean isSub = simpUser.getSessions().stream().findAny().get().getSubscriptions()
-                    .stream().anyMatch(simpSubscription -> simpSubscription.getDestination().equals("/chatroom/public"));
+        Set<String> usersWithPublic = simpUsers.stream().filter( simpUser -> {
+            boolean isSub = simpUser.getSessions()
+                    .stream().anyMatch(session -> session.getSubscriptions()
+                            .stream().anyMatch(simpSubscription -> simpSubscription.getDestination().equals("/chatroom/public")));
             return isSub;
-        } ).collect(Collectors.toSet());
-        usersWithPublic.forEach(user -> {
-            String email = user.getName();
+        }).map(simpUser -> simpUser.getName()).collect(Collectors.toSet());
+
+        usersWithPublic.forEach(email -> {
             AccountEntity account = authRepository.findByEmail(email);
             FriendDTO friendDTO = new FriendDTO();
-            friendDTO.setEmail(email);
-            friendDTO.setName(user.getName());
-            ImageEntity image = imageRepository.findByEmail(user.getName());
+            friendDTO.setEmail(account.getEmail());
+            friendDTO.setName(account.getFullName());
+            ImageEntity image = imageRepository.findByEmail(email);
             friendDTO.setOauth2(image.isOauth2());
+
             if (image.isOauth2()) {
-                friendDTO.setAvatar(account.getAvatar());
+                friendDTO.setAvatar(((String) image.getImage()));
             } else {
-                image.setImage(Base64.getEncoder().encodeToString(((Binary) friendDTO.getAvatar()).getData()));
+                friendDTO.setAvatar(Base64.getEncoder().encodeToString(((Binary) image.getImage()).getData()));
             }
-
-
+            friends.add(friendDTO);
         });
-
+        messageDTOs.setFriends(friends);
         return messageDTOs;
     }
 

@@ -1,21 +1,28 @@
 package com.vinh.chat.service.imp;
 
+import com.vinh.chat.dto.FriendDTO;
 import com.vinh.chat.dto.GroupDTO;
 import com.vinh.chat.entity.AccountEntity;
 import com.vinh.chat.entity.GroupEntity;
+import com.vinh.chat.model.mongodb.ImageEntity;
 import com.vinh.chat.repository.AccountRepository;
+import com.vinh.chat.repository.mongodb.ImageRepository;
 import com.vinh.chat.service.GroupService;
 import com.vinh.chat.utils.ComponentUtils;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
 public class GroupServiceImp implements GroupService {
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    ImageRepository imageRepository;
     @Autowired
     ComponentUtils componentUtils;
     @Override
@@ -66,5 +73,24 @@ public class GroupServiceImp implements GroupService {
     public boolean inviteFriend(int groupId, int accountId) {
 
         return false;
+    }
+
+    @Override
+    public FriendDTO updateFriendGroup(String email, boolean isOnline) {
+        FriendDTO friendDTO = new FriendDTO();
+
+        AccountEntity account = accountRepository.findByEmail(email);
+        friendDTO.setId(account.getId());
+        friendDTO.setName(account.getFullName());
+        friendDTO.setEmail(account.getEmail());
+        friendDTO.setOnline(isOnline);
+        ImageEntity image = imageRepository.findByEmail(account.getEmail());
+        friendDTO.setOauth2(image.isOauth2());
+        if (image.isOauth2()) {
+            friendDTO.setAvatar(((String) image.getImage()));
+        } else {
+            friendDTO.setAvatar(Base64.getEncoder().encodeToString(((Binary) image.getImage()).getData()));
+        }
+        return friendDTO;
     }
 }

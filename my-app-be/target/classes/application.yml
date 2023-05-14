@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-cfu1i79a6gdotc91jqig-a.singapore-postgres.render.com/shop_db_hqzx
+    username: shop_db_hqzx_user
+    password: isoDlSpzCNZdFrOqJhontgJQVrXGhgrO
+  data:
+    mongodb:
+      uri: mongodb+srv://goodbyevinh:a123456789@cluster0.pg2urph.mongodb.net/app_chat
+      database: app_chat
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 437768363866-8s7k2a71saf8ta7v6q6ke87hqct0l7id.apps.googleusercontent.com
+            client-secret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+
+server:
+  servlet:
+    context-path: /api
+
+
+

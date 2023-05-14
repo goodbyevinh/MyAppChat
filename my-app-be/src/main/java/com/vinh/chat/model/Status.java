@@ -4,5 +4,6 @@ public enum Status {
     JOIN,
     MESSAGE,
     LEAVE,
-    ONLINE
+    ONLINE,
+    FRIEND_GROUP
 }

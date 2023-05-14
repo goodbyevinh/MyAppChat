@@ -7,8 +7,8 @@ import Message from '../../components/Message/Message';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorEmail, selectorOauth2, selectorToken } from '../../store/account/selector';
 import { getPublicMessage, stompClient, connect, joinPublicChatRoom, joinPrivateChat, joinGroupChat, getPrivateMessage } from './../../services/messageService';
-import { sendMessage, joinChat, getMessages, receiveMessage, connectWebSocket, connectedWebSocket, unConnectedWebSocket, leaveChat } from './../../store/message/action';
-import { CHAT_PUBLIC, TEXT, VIDEO, IMAGE, CHAT_PRIVATE, CHAT_GROUP, Message as MessageProps, JOIN, MESSAGE, LEAVE } from './../../store/message/types';
+import { sendMessage, joinChat, getMessages, receiveMessage, connectWebSocket, connectedWebSocket, unConnectedWebSocket, leaveChat, updateFriendGroup } from './../../store/message/action';
+import { CHAT_PUBLIC, TEXT, VIDEO, IMAGE, CHAT_PRIVATE, CHAT_GROUP, Message as MessageProps, JOIN, MESSAGE, LEAVE, FRIEND_GROUP } from './../../store/message/types';
 import { selectorMessages, selectorTypeChat } from '../../store/message/selector';
 import { selectorName, selectorFriends, selectorGroups, selectorUser } from './../../store/account/selector';
 import { userInit, loading, friendInit } from '../../store/account/action';
@@ -18,7 +18,7 @@ import { useSearchParams } from 'react-router-dom';
 import swal  from 'sweetalert';
 import { type } from 'os';
 import { uploadImage, getImage } from './../../services/fileService';
-import { ONLINE, UPDATE_FRIENDS_IN_GROUP, UPDATE_STATUS_FRIENDS } from '../../store/account/types';
+import { ONLINE, UPDATE_STATUS_FRIENDS } from '../../store/account/types';
 
 
 
@@ -67,8 +67,16 @@ export function Chat() {
   }, [])
 
 
+  const handleTabClose = (event : any) => {
+    event.preventDefault();
+    
+  } 
   useEffect(() => {
     scrollToBottom()
+    window.addEventListener('beforeunload', handleTabClose);
+    return () => {
+      window.addEventListener('beforeunload', handleTabClose);
+    }
   }, [messages]);
   const initChat = async () => {
     dispatch(loading())
@@ -79,7 +87,7 @@ export function Chat() {
     connect(token, () => {
       dispatch(connectedWebSocket());
       handleJoinRoom();
-      stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
+      
       stompClient.subscribe(`/user/${email}/private`, onPrivateMessageReceived);
 
     }, () => {
@@ -92,10 +100,14 @@ export function Chat() {
     const type = searchParam.get("typechat")
     const receiverEmail = searchParam.get('email')
     if (type === 'public') {
+
+      stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
       joinPublicChatRoom()
+      
 
     } else if (type === 'private' && receiverEmail) {
       if (receiverEmail) {
+       
         stompClient.subscribe(`/user/${receiverEmail}/private`, onPrivateMessageReceived);
         joinPrivateChat(receiverEmail)
       }
@@ -115,12 +127,11 @@ export function Chat() {
 
     switch (data.status) {
       case JOIN: {
-
         dispatch(joinChat(data.typeChat))
+        dispatch(loading())
         const response = await getPublicMessage()
-
-        dispatch(getMessages(response.data.messages))
-
+        dispatch(getMessages(response.data.messages, response.data.friends))
+        dispatch(notLoading())
         break;
       }
       case MESSAGE: {
@@ -128,7 +139,7 @@ export function Chat() {
 
         data.sender.avatar = response.image
         data.sender.oauth2 = response.oauth2
-        
+     
         if (data.typeMessage === IMAGE) {
 
           const responseImage = await getImage(data.content)
@@ -146,6 +157,9 @@ export function Chat() {
       case LEAVE: {
 
         break;
+      }
+      case FRIEND_GROUP : {
+        dispatch(updateFriendGroup(data.friend))
       }
 
     }
