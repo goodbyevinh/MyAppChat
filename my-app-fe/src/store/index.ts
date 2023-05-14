@@ -40,7 +40,6 @@ store.subscribe ( () => {
     }
 })
 
-
 export {
     store,
     persistedStore
