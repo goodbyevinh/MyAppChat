@@ -22,4 +22,5 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 
 
+
 export {persistedReducer, rootReducer} 
