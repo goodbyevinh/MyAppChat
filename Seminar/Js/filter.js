@@ -4,8 +4,6 @@ var filterArr1 = arr.filter(function(num) {
     return num > 9;
 });
 
-console.log(filterArr1)
-
 Array.prototype.filterOther = function(callback) {
 
     var arr = [];
@@ -23,6 +21,4 @@ Array.prototype.filterOther = function(callback) {
 var filterArr2 = arr.filterOther(function(item) {
     return item > 5;
 })
-
-console.log(filterArr2)
 

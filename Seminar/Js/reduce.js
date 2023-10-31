@@ -2,15 +2,8 @@ const arr = [1,2,3,4,5];
 
 const result1 = arr.reduce(function(total, number) {
     return total + number;
-});
+}, 10);
 
-console.log(result1);
-
-const result2 = arr.reduce(function(total, number) {
-    return total + number;
-}, 100);
-
-console.log(result2);
 
 Array.prototype.reduceOther = function(callback, result) {
 
@@ -30,9 +23,8 @@ Array.prototype.reduceOther = function(callback, result) {
     return result;
 }
 
-const result3 = arr.reduceOther(function(total, number) {
+const result2 = arr.reduceOther(function(total, number) {
     return total + number;
-}, 100)
+}, 10)
 
-console.log(result3);
-
+console.log(result1)
